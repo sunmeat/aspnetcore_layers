@@ -41,3 +41,51 @@ namespace Soccer.DAL.Repositories
         }
     }
 }
+
+/* // можна було б і так зробити, вийде навіть краще:
+using Soccer.DAL.EF;
+using Soccer.DAL.Interfaces;
+using Soccer.DAL.Entities;
+
+namespace Soccer.DAL.Repositories
+{
+    public class EFUnitOfWork : IUnitOfWork
+    {
+        private readonly SoccerContext _db;
+        private readonly IRepository<Team> _teams;
+        private readonly IRepository<Player> _players;
+
+        public EFUnitOfWork(
+            SoccerContext db,
+            IRepository<Team> teams,
+            IRepository<Player> players) // всі реалізації будуть надані інфраструктурою асп нет, не треба буде нью
+        {
+            _db = db;
+            _teams = teams;
+            _players = players;
+        }
+
+        public IRepository<Team> Teams => _teams;
+        public IRepository<Player> Players => _players;
+
+        public async Task Save()
+        {
+            await _db.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _db.Dispose();
+        }
+    }
+} */ // але тоді і інфраструктурі середнього рівня треба зареєструвати репозиторії: (Soccer.BLL Infrastructure SoccerContextExtensions.cs)
+/*
+public static void AddSoccerDal(this IServiceCollection services)
+        {
+            services.AddScoped<IRepository<Team>, TeamRepository>();
+            services.AddScoped<IRepository<Player>, PlayerRepository>();
+
+            services.AddScoped<IUnitOfWork, EFUnitOfWork>();
+        }
+*/ // ну і ще в Program.cs буде таке:
+// builder.Services.AddSoccerDal(); // <-- реєструє репозиторії + UnitOfWork
