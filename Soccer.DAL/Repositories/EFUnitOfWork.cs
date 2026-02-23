@@ -4,15 +4,14 @@ using Soccer.DAL.Entities;
 
 namespace Soccer.DAL.Repositories 
 {
-    /*
-     * патерн unit of work спрощує роботу з різними репозиторіями та гарантує,
+    /* патерн unit of work спрощує роботу з різними репозиторіями та гарантує,
      * що всі репозиторії використовують один і той же контекст даних.
     */
     public class EFUnitOfWork : IUnitOfWork
     {
         private SoccerContext db; 
-        private PlayerRepository playerRepository; // поле для кешування репозиторію гравців
-        private TeamRepository teamRepository;     // поле для кешування репозиторію команд
+        private IRepository<Player>? playerRepository; // поле для кешування репозиторію гравців
+        private IRepository<Team>? teamRepository;     // поле для кешування репозиторію команд
         public EFUnitOfWork(SoccerContext context) // конструктор, що приймає готовий контекст
         {
             db = context; // ініціалізація поля контекстом, переданим через di
